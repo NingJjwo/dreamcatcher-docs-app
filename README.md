@@ -35,7 +35,7 @@ If you do not have `pnpm` installed yet:
 npm install -g pnpm
 ```
 
-## ▶️ Run locally
+## Run locally
 
 ```bash
 pnpm dev
