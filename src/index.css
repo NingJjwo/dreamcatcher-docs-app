@@ -1,14 +1,32 @@
-/**, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --color-abyss-950: #0a1218;
+  --color-abyss-900: #0d1620;
+  --color-abyss-850: #1c2b35;
+  --color-abyss-700: #2c3e4a;
+  --color-abyss-600: #3d5563;
+  --color-abyss-400: #8ba3b0;
+  --color-abyss-300: #a8bfc9;
+  --color-mist: #c5d6dc;
+  --color-teal: #6aa6ba;
+
+  --font-gothic: "Cinzel", "Trajan Pro", "Times New Roman", serif;
+  --font-body: "Segoe UI", system-ui, sans-serif;
 }
 
-:root {
-  font-family: system-ui, sans-serif;
-  -webkit-font-smoothing: antialiased;
-}
+@layer base {
+  body {
+    min-height: 100vh;
+    color: var(--color-abyss-300);
+    font-family: var(--font-body);
+    background:
+      radial-gradient(900px 420px at 50% -8%, rgba(138, 163, 176, 0.1), transparent 62%),
+      var(--color-abyss-950);
+  }
 
-#root {
-  min-height: 100vh;
+  html {
+    scroll-behavior: smooth;
+  }
 }
