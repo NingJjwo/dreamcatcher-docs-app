@@ -1,6 +1,6 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet } from 'react-router-dom'
 
-export default function Navbar() {
+export default function Layout() {
   return (
     <>
       <a
@@ -67,5 +67,5 @@ export default function Navbar() {
         </div>
       </footer>
     </>
-  );
+  )
 }

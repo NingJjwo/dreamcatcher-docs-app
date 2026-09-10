@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom'
-import Navbar from '../components/NavBar'
+import Layout from '../components/Layout'
 import HomePage from '../pages/HomePage'
 import DocsPage from '../pages/DocsPage'
 import NotFoundPage from '../pages/NotFoundPage'
@@ -7,7 +7,7 @@ import NotFoundPage from '../pages/NotFoundPage'
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <Navbar />,
+    element: <Layout />,
     children: [
       { index: true, element: <HomePage /> },
       { path: 'docs', element: <DocsPage /> },
