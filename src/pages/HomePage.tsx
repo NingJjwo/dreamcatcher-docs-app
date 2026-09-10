@@ -2,9 +2,8 @@ import { Link } from 'react-router-dom'
 
 export default function HomePage() {
   return (
-    <>
-      <section
-        className="relative flex min-h-[calc(100vh-73px)] items-center justify-center overflow-hidden px-8"
+    <section
+      className="relative flex min-h-[calc(100vh-73px)] items-center justify-center overflow-hidden px-8"
         style={{
           backgroundImage: "url('/images/landing-bg.jpg')",
           backgroundSize: 'cover',
@@ -34,10 +33,5 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      <footer className="border-t border-abyss-700 py-8 text-center text-sm text-abyss-400">
-        Dreamcatcher API — © 2026. Summoned from the abyss.
-      </footer>
-    </>
   )
 }
