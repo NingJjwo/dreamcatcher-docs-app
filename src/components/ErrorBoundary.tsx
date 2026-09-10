@@ -22,9 +22,9 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
   render(): ReactNode {
     if (this.state.hasError) {
       return (
-        <div className="flex min-h-screen items-center justify-center bg-abyss-950 p-8 text-center">
+        <div role="alert" className="flex min-h-screen items-center justify-center bg-abyss-950 p-8 text-center">
           <div>
-            <h1 className="font-gothic text-3xl font-bold text-mist uppercase">
+            <h1 className="font-headline text-3xl font-bold text-mist uppercase">
               Something went wrong
             </h1>
             <p className="mt-3 text-abyss-400">
@@ -33,7 +33,7 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
             <button
               type="button"
               onClick={() => this.setState({ hasError: false })}
-              className="mt-6 rounded-md bg-teal px-5 py-2 font-gothic text-sm font-semibold tracking-widest text-abyss-950 uppercase transition hover:-translate-y-0.5 hover:brightness-110"
+              className="mt-6 rounded-md bg-gold px-5 py-2 font-headline text-sm font-semibold tracking-widest text-abyss-950 uppercase transition hover:-translate-y-0.5 hover:brightness-110"
             >
               Retry
             </button>
