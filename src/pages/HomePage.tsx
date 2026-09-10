@@ -1,181 +1,20 @@
 import { useEffect, useState } from 'react'
 import { fetchAlbums, fetchIdols, type Album, type Idol } from '../lib/api'
+import { pickRandomAlbums } from '../lib/pick-random'
+import { AlbumCard } from '../components/home/AlbumCard'
+import { IdolCard } from '../components/home/IdolCard'
+import { EmptyCard, ErrorCard, SkeletonAlbumCard, SkeletonIdolCard } from '../components/home/StateCards'
 
 const KEEPALIVE_MS = 14 * 60 * 1000
 const ALBUM_SLOTS = 5
-
-function IdolCard({ idol, onShuffle }: { idol: Idol; onShuffle: () => void }) {
-  return (
-    <article className="flex flex-col overflow-hidden rounded-xl border border-crimson-dark/40 bg-surface-container shadow-lg transition-all duration-300 hover:border-crimson hover:shadow-[0_0_20px_rgba(209,26,56,0.25)] sm:flex-row">
-      <div className="relative w-full shrink-0 overflow-hidden bg-surface-container-lowest sm:w-72">
-        <div className="aspect-square w-full sm:aspect-auto sm:h-full">
-          {idol.imageUrl ? (
-            <img className="h-full w-full object-cover" src={idol.imageUrl} alt={`${idol.stageName} portrait`} />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center">
-              <span aria-hidden="true" className="material-symbols-outlined text-[40px] text-outline">
-                image
-              </span>
-            </div>
-          )}
-          <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest/70 via-transparent to-transparent sm:bg-gradient-to-r" />
-          <span className="absolute top-3 left-3 rounded border border-gold/30 bg-surface-container-lowest/90 px-2 py-0.5 font-mono text-[10px] text-gold">
-            #01
-          </span>
-        </div>
-      </div>
-      <div className="flex min-w-0 flex-1 flex-col justify-between gap-5 p-5 sm:p-6">
-        <div>
-          <h3 className="font-headline text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            {idol.stageName}
-          </h3>
-          <div className="mt-1 font-mono text-xs text-outline">{idol.realName ?? '—'}</div>
-        </div>
-        <div className="grid grid-cols-2 gap-x-6 gap-y-4">
-          <div>
-            <div className="font-mono text-[10px] uppercase tracking-wider text-gold/80">Positions</div>
-            <div className="font-body text-sm text-on-surface">
-              {idol.positions.length > 0 ? idol.positions.join(', ') : '—'}
-            </div>
-          </div>
-          <div>
-            <div className="font-mono text-[10px] uppercase tracking-wider text-gold/80">Nationality</div>
-            <div className="font-body text-sm text-on-surface">{idol.nationality ?? '—'}</div>
-          </div>
-          <div className="col-span-2">
-            <div className="font-mono text-[10px] uppercase tracking-wider text-outline">Lore concept</div>
-            <div className="font-body text-sm text-on-surface-variant">{idol.loreConcept ?? '—'}</div>
-          </div>
-        </div>
-        <div className="border-t border-outline-variant/30 pt-4">
-          <button
-            type="button"
-            onClick={onShuffle}
-            className="flex items-center gap-1.5 rounded border border-crimson-glow/30 bg-crimson px-4 py-2 font-mono text-xs font-bold uppercase tracking-wide text-white shadow-[0_0_16px_rgba(209,26,56,0.45)] transition-all hover:bg-crimson-glow"
-          >
-            <span aria-hidden="true" className="material-symbols-outlined text-[16px]">
-              autorenew
-            </span>
-            Give me another
-          </button>
-        </div>
-      </div>
-    </article>
-  )
-}
-
-function AlbumCard({ album }: { album: Album }) {
-  return (
-    <article className="flex flex-col overflow-hidden rounded-xl border border-crimson-dark/40 bg-surface-container shadow-lg transition-all duration-300 hover:border-crimson hover:shadow-[0_0_20px_rgba(209,26,56,0.25)]">
-      <div className="relative aspect-square w-full overflow-hidden bg-surface-container-lowest">
-        {album.albumImage ? (
-          <img className="h-full w-full object-cover" src={album.albumImage} alt={`${album.albumTitle} cover`} loading="lazy" />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center">
-            <span aria-hidden="true" className="material-symbols-outlined text-[32px] text-outline">
-              image
-            </span>
-          </div>
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest/80 via-transparent to-transparent" />
-      </div>
-      <div className="flex min-w-0 flex-1 flex-col gap-2 p-4">
-        <h3 className="truncate font-headline text-lg font-bold tracking-tight text-white" title={album.albumTitle}>
-          {album.albumTitle}
-        </h3>
-        <div className="truncate font-mono text-[10px] text-outline">{album.albumType ?? 'Album'}</div>
-        <div className="mt-auto space-y-1">
-          <div>
-            <div className="font-mono text-[10px] uppercase tracking-wider text-gold/80">Track count</div>
-            <div className="truncate font-body text-xs text-on-surface">
-              {album.trackCount != null ? `${album.trackCount} tracks` : '—'}
-            </div>
-          </div>
-          <div>
-            <div className="font-mono text-[10px] uppercase tracking-wider text-outline">Released</div>
-            <div className="truncate font-body text-xs font-medium text-on-surface-variant">
-              {album.releaseDate != null ? String(album.releaseDate) : '—'}
-            </div>
-          </div>
-        </div>
-      </div>
-    </article>
-  )
-}
-
-function SkeletonIdolCard() {
-  return (
-    <div className="flex animate-pulse flex-col overflow-hidden rounded-xl border border-crimson-dark/40 bg-surface-container sm:flex-row">
-      <div className="aspect-square w-full bg-surface-container-lowest sm:w-72" />
-      <div className="flex flex-1 flex-col gap-3 p-5 sm:p-6">
-        <div className="h-7 w-40 rounded bg-surface-container-highest" />
-        <div className="h-3 w-24 rounded bg-surface-container-high" />
-        <div className="mt-2 h-3 w-32 rounded bg-surface-container-high" />
-        <div className="h-3 w-48 rounded bg-surface-container-high" />
-        <div className="mt-auto h-9 w-40 rounded bg-surface-container-high" />
-      </div>
-    </div>
-  )
-}
-
-function SkeletonAlbumCard() {
-  return (
-    <div className="flex animate-pulse flex-col overflow-hidden rounded-xl border border-crimson-dark/40 bg-surface-container">
-      <div className="aspect-square w-full bg-surface-container-lowest" />
-      <div className="flex flex-col gap-2 p-4">
-        <div className="h-4 w-28 rounded bg-surface-container-highest" />
-        <div className="h-3 w-24 rounded bg-surface-container-high" />
-        <div className="mt-1 h-3 w-full rounded bg-surface-container-high" />
-      </div>
-    </div>
-  )
-}
-
-function ErrorCard({ detail, onRetry }: { detail: string; onRetry: () => void }) {
-  return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-crimson-dark/40 bg-surface-container px-6 py-8 text-center">
-      <span aria-hidden="true" className="material-symbols-outlined text-[32px] text-crimson-glow">
-        cloud_off
-      </span>
-      <p className="max-w-[260px] text-xs text-on-surface-variant">{detail}</p>
-      <button
-        type="button"
-        onClick={onRetry}
-        className="rounded bg-crimson px-4 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wide text-white hover:bg-crimson-glow"
-      >
-        Retry
-      </button>
-    </div>
-  )
-}
-
-function EmptyCard({ label }: { label: string }) {
-  return (
-    <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-crimson-dark/40 bg-surface-container px-6 py-8 text-center">
-      <span aria-hidden="true" className="material-symbols-outlined text-[28px] text-outline">
-        inbox
-      </span>
-      <p className="text-xs text-on-surface-variant">{label}</p>
-    </div>
-  )
-}
-
-function pickRandomAlbums(albums: Album[], count: number): Album[] {
-  if (albums.length <= count) return [...albums]
-  const pool = [...albums]
-  const chosen: Album[] = []
-  while (chosen.length < count) {
-    chosen.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0])
-  }
-  return chosen
-}
 
 export default function HomePage() {
   const [idols, setIdols] = useState<Idol[] | null>(null)
   const [albums, setAlbums] = useState<Album[] | null>(null)
   const [idolIndex, setIdolIndex] = useState(0)
   const [albumCards, setAlbumCards] = useState<Album[]>([])
-  const [error, setError] = useState<string | null>(null)
+  const [idolsFailed, setIdolsFailed] = useState(false)
+  const [albumsFailed, setAlbumsFailed] = useState(false)
   const [attempt, setAttempt] = useState(0)
 
   useEffect(() => {
@@ -187,28 +26,23 @@ export default function HomePage() {
 
       if (idolsResult.status === 'fulfilled') {
         setIdols(idolsResult.value)
+        setIdolsFailed(false)
         if (idolsResult.value.length > 0) {
           setIdolIndex(Math.floor(Math.random() * idolsResult.value.length))
         }
       } else {
         setIdols(null)
+        setIdolsFailed(true)
       }
 
       if (albumsResult.status === 'fulfilled') {
         setAlbums(albumsResult.value)
+        setAlbumsFailed(false)
         setAlbumCards(pickRandomAlbums(albumsResult.value, ALBUM_SLOTS))
       } else {
         setAlbums(null)
+        setAlbumsFailed(true)
       }
-
-      const failed: string[] = []
-      if (idolsResult.status !== 'fulfilled') failed.push('idols')
-      if (albumsResult.status !== 'fulfilled') failed.push('albums')
-      setError(
-        failed.length > 0
-          ? `Could not reach the Dreamcatcher API to load ${failed.join(' and ')}.`
-          : null,
-      )
     })()
 
     return () => {
@@ -240,9 +74,7 @@ export default function HomePage() {
 
   const retry = () => setAttempt((current) => current + 1)
 
-  const idolsError = error !== null && error.includes('idols')
-  const albumsError = error !== null && error.includes('albums')
-  const fullyFailed = idolsError && albumsError
+  const fullyFailed = idolsFailed && albumsFailed
 
   return (
     <div className="flex w-full flex-col bg-surface-dim">
@@ -293,7 +125,7 @@ export default function HomePage() {
             <div className="flex flex-col gap-10">
               <div className="flex flex-col gap-3">
                 {idols === null ? (
-                  idolsError ? (
+                  idolsFailed ? (
                     <ErrorCard detail="Could not load idols from the API." onRetry={retry} />
                   ) : (
                     <SkeletonIdolCard />
@@ -315,7 +147,7 @@ export default function HomePage() {
                   <span>Albums</span>
                 </div>
                 {albums === null ? (
-                  albumsError ? (
+                  albumsFailed ? (
                     <ErrorCard detail="Could not load albums from the API." onRetry={retry} />
                   ) : (
                     <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
