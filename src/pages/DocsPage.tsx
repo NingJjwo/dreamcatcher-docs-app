@@ -49,20 +49,21 @@ export default function DocsPage() {
 
   return (
     <section className="mx-auto flex w-full max-w-6xl gap-10 px-8 pt-14 pb-24">
-      <aside className="w-56 shrink-0">
+      <aside aria-label="Navegacion de la grimoire" className="w-56 shrink-0">
         <p className="mb-4 text-xs font-semibold tracking-[0.35em] text-teal uppercase">
           Grimoire
         </p>
-        <nav className="flex flex-col gap-1">
+        <nav className="flex flex-col gap-1" aria-label="Secciones de la API">
           {sections.map((s) => (
             <button
               key={s.id}
               type="button"
+              aria-pressed={s.id === active}
               onClick={() => setActive(s.id)}
               className={
                 s.id === active
-                  ? 'rounded border-l-2 border-teal bg-abyss-850 px-3 py-2 text-left font-gothic text-sm tracking-wider text-mist uppercase'
-                  : 'rounded border-l-2 border-transparent px-3 py-2 text-left font-gothic text-sm tracking-wider text-abyss-400 uppercase transition hover:text-mist'
+                  ? 'rounded border-l-2 border-teal bg-abyss-850 px-3 py-2 text-left font-gothic text-sm tracking-wider text-mist uppercase focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal'
+                  : 'rounded border-l-2 border-transparent px-3 py-2 text-left font-gothic text-sm tracking-wider text-abyss-400 uppercase transition hover:text-mist focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal'
               }
             >
               {s.title}
@@ -77,10 +78,11 @@ export default function DocsPage() {
         </h1>
         <p className="mt-3 max-w-2xl leading-relaxed text-abyss-300">{section.description}</p>
 
-        <div className="mt-8 space-y-4">
+        <div className="mt-8 space-y-4" role="list">
           {section.endpoints.map((endpoint) => (
             <article
               key={endpoint.path}
+              role="listitem"
               className="rounded-lg border border-abyss-700 bg-abyss-850/80 p-5"
             >
               <div className="flex items-center gap-3">
