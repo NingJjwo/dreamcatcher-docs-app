@@ -16,7 +16,7 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
   }
 
   componentDidCatch(error: Error, info: ErrorInfo): void {
-    console.error('Error capturado por el boundary:', error, info)
+    console.error('Error captured by the boundary:', error, info)
   }
 
   render(): ReactNode {
@@ -25,17 +25,17 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
         <div className="flex min-h-screen items-center justify-center bg-abyss-950 p-8 text-center">
           <div>
             <h1 className="font-gothic text-3xl font-bold text-mist uppercase">
-              Algo salio mal
+              Something went wrong
             </h1>
             <p className="mt-3 text-abyss-400">
-              La pagina encontro un error inesperado. Intenta recargar.
+              The page ran into an unexpected error. Try reloading.
             </p>
             <button
               type="button"
               onClick={() => this.setState({ hasError: false })}
               className="mt-6 rounded-md bg-teal px-5 py-2 font-gothic text-sm font-semibold tracking-widest text-abyss-950 uppercase transition hover:-translate-y-0.5 hover:brightness-110"
             >
-              Reintentar
+              Retry
             </button>
           </div>
         </div>
